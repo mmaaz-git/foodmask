@@ -1,14 +1,11 @@
 
-# Transformers.js - Sample browser extension
+# Foodmask
 
-An example project to show how to run 🤗 Transformers in a browser extension. Although we only provide instructions for running in Chrome, it should be similar for other browsers.
+A Chrome extension that masks pictures of food so you don't get tempted while fasting :) 
+On a more serious note, it demonstrates the use of quantized machine learning models that can run locally on your browser -- which I am personally extremely excited about (see below for more details).
 
 ## Getting Started
-1. Clone the repo and enter the project directory:
-    ```bash
-    git clone https://github.com/xenova/transformers.js.git
-    cd transformers.js/examples/extension/
-    ```
+1. Clone the repo and enter the project directory.
 1. Install the necessary dependencies:
     ```bash
     npm install 
@@ -21,15 +18,9 @@ An example project to show how to run 🤗 Transformers in a browser extension. 
 
 1. Add the extension to your browser. To do this, go to `chrome://extensions/`, enable developer mode (top right), and click "Load unpacked". Select the `build` directory from the dialog which appears and click "Select Folder".
 
-1. That's it! You should now be able to open the extenion's popup and use the model in your browser!
+1. Navigate to a webpage, open the popup and click the button. In a few seconds all the food pictures should be grayed out! Try it out on the sample page given in `public/test.html`.
 
-## Editing the template
+## How it works
+The extension uses [https://huggingface.co/docs/transformers.js/en/index](Transformer.js), a brilliant library which lets you run machine learning models locally. There is now a large collection of quantized models on Huggingface which are small enough to run pretty fast with the limited CPU of your web browser. In particular, this extension uses [https://huggingface.co/Xenova/clip-vit-base-patch32](Xenova/clip-vit-base-patch32) which is a quantized version of OpenAI's [https://huggingface.co/openai/clip-vit-base-patch32](CLIP) model. The model is a multimodal vision-language model, trained on pairs of images and text. Hence, it can perform zero-shot classification. In this case, the extension asks it to classify all images on the current webpage (identified by the `img` tag) as 'food' or 'not food', and takes the image to be food if the probability assigned to food is greater than 0.6. I'm extremely excited by the potential of quantized models and was pleasantly surprised at how fast this model can run on my browser, given its power.
 
-We recommend running `npm run dev` while editing the template as it will rebuild the project when changes are made. 
-
-All source code can be found in the `./src/` directory:
-- `background.js` ([service worker](https://developer.chrome.com/docs/extensions/mv3/service_workers/)) - handles all the requests from the UI, does processing in the background, then returns the result. You will need to reload the extension (by visiting `chrome://extensions/` and clicking the refresh button) after editing this file for changes to be visible in the extension.
-
-- `content.js` ([content script](https://developer.chrome.com/docs/extensions/mv3/content_scripts/)) - contains the code which is injected into every page the user visits. You can use the `sendMessage` api to make requests to the background script. Similarly, you will need to reload the extension after editing this file for changes to be visible in the extension.
-
-- `popup.html`, `popup.css`, `popup.js` ([toolbar action](https://developer.chrome.com/docs/extensions/reference/action/)) - contains the code for the popup which is visible to the user when they click the extension's icon from the extensions bar. For development, we recommend opening the `popup.html` file in its own tab by visiting `chrome-extension://<ext_id>/popup.html` (remember to replace `<ext_id>` with the extension's ID). You will need to refresh the page while you develop to see the changes you make.
+I learned how to integrate Transformers.js into a Chrome extension by studying the example given in the [https://github.com/xenova/transformers.js](Transformers.js repo).
