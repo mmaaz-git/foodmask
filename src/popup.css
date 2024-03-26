@@ -1,0 +1,11 @@
+html,
+body {
+    min-width: 200px;
+    min-height: 300px;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
